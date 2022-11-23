@@ -4,3 +4,4 @@ terraform/.terraform*
 terraform/terraform.tfstate
 terraform/terraform.backup
 terraform/tf.env
+.vscode

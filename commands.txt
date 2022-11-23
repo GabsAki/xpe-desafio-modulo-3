@@ -3,7 +3,19 @@
 # --node-private-networking > define que a rede interna dos nós vai ser uma rede privada
 # --full-ecr-access > permite acessar qualquer imagem docker
 # --nodegroup-name > nomear as máquinas que fazem parte do cluster facilita a identificação e impede confusões em clusters compartilhados.
-eksctl create cluster --name=k8sxpegabs --managed --instance-types=m5.large --spot --nodes-min=2 --nodes-max=4 --region=us-east-2 --alb-ingress-access --node-private-networking --nodegroup-name=ng-k8sxpegabs
+eksctl create cluster --name=k8sxpegabs --managed --instance-types=m5.large --spot --nodes-min=2 --nodes-max=4 --region=us-east-2 --alb-ingress-access --node-private-networking --full-ecr-access --nodegroup-name=ng-k8sxpegabs
 
 # Ajustar o arquivo kubeconfig para poder ser conectar ao cluster com o kubectl
 aws eks --region us-east-2 update-kubeconfig --name k8sxpegabs
+
+# Iniciar uma instancia do aiflow no kubernets com configuracoes costumizadas
+helm install airflow apache-airflow/airflow -f airflow/myvalues.yaml -n airflow --debug
+
+# Deletar o cluster
+eksctl delete cluster --region us-east-2 --name k8sxpegabs
+
+# Copiar as configuracoes do airflow se baseando em uma versao do chart especifica
+helm show values apache-airflow/airflow --version 1.1.0 > airflow/myvalues_110.yaml
+
+# Iniciar uma instancia do aiflow no kubernets com configuracoes costumizadas e com uma versao do chart especifica.
+helm install airflow apache-airflow/airflow --version 1.1.0 -f airflow/myvalues_110.yaml -n airflow --debug
