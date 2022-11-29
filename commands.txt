@@ -25,3 +25,6 @@ kubectl apply -f kubernetes/airflow/rolebinding_for_aiflow.yaml -n airflow
 
 # Subir o spark operator
 helm install spark spark-operator/spark-operator -n airflow
+
+# Ver pods
+kubectl get pods -n airflow --watch
