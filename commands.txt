@@ -22,3 +22,6 @@ helm install airflow apache-airflow/airflow --version 1.1.0 -f airflow/myvalues_
 
 # Applicar os rolebindgs
 kubectl apply -f kubernetes/airflow/rolebinding_for_aiflow.yaml -n airflow
+
+# Subir o spark operator
+helm install spark spark-operator/spark-operator -n processing
